@@ -56,4 +56,6 @@ const (
 	ParentScopeIdKey = "parent_scope_id"
 	// GroupMemberIdsKey is used for common "member_ids" resource attribute
 	GroupMemberIdsKey = "member_ids"
+	// FilterKey is used for managed groups "filter" resource attribute
+	ManagedGroupFilterKey = "filter"
 )

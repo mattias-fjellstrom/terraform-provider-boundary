@@ -13,10 +13,6 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const (
-	managedGroupFilterKey = "filter"
-)
-
 func resourceManagedGroup() *schema.Resource {
 	return &schema.Resource{
 		Description: "The managed group resource allows you to configure a Boundary group.",
@@ -51,7 +47,7 @@ func resourceManagedGroup() *schema.Resource {
 				Required:    true,
 				ForceNew:    true,
 			},
-			managedGroupFilterKey: {
+			ManagedGroupFilterKey: {
 				Description: "Boolean expression to filter the workers for this managed group.",
 				Type:        schema.TypeString,
 				Required:    true,
@@ -73,8 +69,8 @@ func setFromManagedGroupResponseMap(d *schema.ResourceData, raw map[string]inter
 
 	if attrsVal, ok := raw["attributes"]; ok {
 		attrs := attrsVal.(map[string]interface{})
-		if v, ok := attrs[managedGroupFilterKey]; ok {
-			if err := d.Set(managedGroupFilterKey, v); err != nil {
+		if v, ok := attrs[ManagedGroupFilterKey]; ok {
+			if err := d.Set(ManagedGroupFilterKey, v); err != nil {
 				return err
 			}
 		}
@@ -109,7 +105,7 @@ func resourceManagedGroupCreate(ctx context.Context, d *schema.ResourceData, met
 		opts = append(opts, managedgroups.WithDescription(descStr))
 	}
 
-	v, ok := d.GetOk(managedGroupFilterKey)
+	v, ok := d.GetOk(ManagedGroupFilterKey)
 	if ok {
 		str := v.(string)
 		opts = append(opts, managedgroups.WithOidcManagedGroupFilter(str))
@@ -182,8 +178,8 @@ func resourceManagedGroupUpdate(ctx context.Context, d *schema.ResourceData, met
 	}
 
 	var filter *string
-	if d.HasChange(managedGroupFilterKey) {
-		if f, ok := d.GetOk(managedGroupFilterKey); ok {
+	if d.HasChange(ManagedGroupFilterKey) {
+		if f, ok := d.GetOk(ManagedGroupFilterKey); ok {
 			filterStr := f.(string)
 			filter = &filterStr
 			opts = append(opts, managedgroups.WithOidcManagedGroupFilter(filterStr))
@@ -208,8 +204,8 @@ func resourceManagedGroupUpdate(ctx context.Context, d *schema.ResourceData, met
 			return diag.FromErr(err)
 		}
 	}
-	if d.HasChange(managedGroupFilterKey) {
-		if err := d.Set(managedGroupFilterKey, filter); err != nil {
+	if d.HasChange(ManagedGroupFilterKey) {
+		if err := d.Set(ManagedGroupFilterKey, filter); err != nil {
 			return diag.FromErr(err)
 		}
 	}
